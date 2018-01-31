@@ -331,3 +331,18 @@ export interface PermissionTemplate {
     withProjectCreator?: boolean;
   }>;
 }
+
+export interface Webhook {
+    key: string;
+    latestDelivery?: WebhookDelivery;
+    name: string;
+    url: string;
+}
+
+export interface WebhookDelivery {
+    at: string;
+    durationMs: number;
+    httpStatus: number;
+    id: string;
+    success: boolean;
+}
