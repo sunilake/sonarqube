@@ -1,0 +1,12 @@
+dependencies {
+  compile 'com.googlecode.json-simple:json-simple'
+  compile 'com.google.code.gson:gson'
+  compile 'junit:junit'
+  compile 'org.hamcrest:hamcrest-core'
+  compile 'commons-io:commons-io'
+  provided 'com.google.code.findbugs:jsr305'
+  
+  testCompile 'org.assertj:assertj-core'
+}
+
+artifactoryPublish.skip = true

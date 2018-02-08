@@ -1,0 +1,82 @@
+sourceSets {
+  test {
+    resources {
+      // TODO filtering
+      srcDirs += ['src/test/projects', 'src/test/filteredresources']
+    }
+  }
+}
+
+dependencies {
+  compile 'org.slf4j:slf4j-api'
+  compile 'org.slf4j:jcl-over-slf4j'
+  compile 'org.slf4j:jul-to-slf4j'
+  compile 'org.apache.logging.log4j:log4j-api'
+  compile 'org.apache.logging.log4j:log4j-core'
+  compile 'ch.qos.logback:logback-access'
+  compile 'ch.qos.logback:logback-classic'
+  compile 'ch.qos.logback:logback-core'
+  compile 'org.apache.tomcat.embed:tomcat-embed-core'
+  compile 'com.google.code.gson:gson'
+  compile 'com.h2database:h2'
+  compile project(':sonar-core')
+  compile project(':server:sonar-db-dao')
+  compile project(':server:sonar-db-migration')
+  compile project(':sonar-scanner-protocol')
+  // TODO exclusions
+  compile project(':sonar-markdown')
+  compile project(':server:sonar-process')
+  // TODO exclusions
+  compile project(path: ':sonar-plugin-api', configuration: 'shadow')
+  compile project(':sonar-ws')
+  compile project(':server:sonar-plugin-bridge')
+  compile 'org.sonarsource.update-center:sonar-update-center-common'
+  compile 'commons-dbutils:commons-dbutils'
+  compile 'org.apache.commons:commons-email'
+  compile 'commons-io:commons-io'
+  compile 'commons-lang:commons-lang'
+  compile 'com.googlecode.java-diff-utils:diffutils:1.2'
+  compile 'org.picocontainer:picocontainer'
+  compile 'commons-codec:commons-codec'
+  compile 'commons-dbcp:commons-dbcp'
+  compile 'org.apache.httpcomponents:httpclient:4.5.2'
+  compile 'org.elasticsearch.client:transport'
+  compile 'com.hazelcast:hazelcast-client'
+  compile 'com.google.protobuf:protobuf-java'
+  compile 'javax.xml.bind:jaxb-api'
+  provided 'com.google.code.findbugs:jsr305'
+  compile 'io.jsonwebtoken:jjwt'
+
+  testCompile 'junit:junit'
+  testCompile 'org.assertj:assertj-core'
+  testCompile 'org.assertj:assertj-guava'
+  testCompile 'org.mockito:mockito-core'
+  // TODO to be removed
+  testCompile 'org.hamcrest:hamcrest-all'
+  testCompile project(':server:sonar-db-testing')
+  testCompile 'com.github.tlrx:elasticsearch-test'
+  testCompile 'com.tngtech.java:junit-dataprovider'
+  testCompile 'com.github.kevinsawicki:http-request'
+  testCompile 'org.reflections:reflections'
+  testCompile 'org.subethamail:subethasmtp'
+  testCompile 'com.squareup.okhttp3:mockwebserver'
+  testCompile("org.elasticsearch.test:framework:${elasticsearchVersion}") {
+    // should be excluded to avoid ES go into "test mode" and require to run EsTester-based UTs with RandomizedRunner
+    exclude group: 'com.carrotsearch.randomizedtesting', module: 'randomizedtesting-runner'
+    exclude group: 'org.elasticsearch', module: 'securemock'
+  }
+}
+
+// FIXME
+if (System.env.'APPVEYOR')
+test {
+  exclude 'org/sonar/server/es/request/ProxyCreateIndexRequestBuilderTest.class'
+  exclude 'org/sonar/server/qualityprofile/RuleActivatorMediumTest.class'
+  exclude 'org/sonar/server/qualityprofile/QProfileServiceMediumTest.class'
+  exclude 'org/sonar/server/qualityprofile/ws/ChangeParentActionMediumTest.class'
+  exclude 'org/sonar/server/qualityprofile/ws/InheritanceActionMediumTest.class'
+  exclude 'org/sonar/server/rule/RuleCreatorMediumTest.class'
+  exclude 'org/sonar/server/rule/RuleServiceMediumTest.class'
+}
+
+artifactoryPublish.skip = true

@@ -1,0 +1,124 @@
+apply plugin: 'com.github.johnrengelman.shadow'
+configurations {
+  ce {
+    transitive = false
+  }
+  scanner
+  webapp
+  jdbc_mssql {
+    transitive = false
+  }
+  jdbc_mysql
+  jdbc_postgresql
+  jdbc_h2
+  plugin {
+    transitive = false
+  }
+  wrapper
+}
+
+dependencies {
+  compile project(':server:sonar-process')
+  compile project(':server:sonar-main')
+
+  compile 'org.elasticsearch.client:transport'
+  // TODO all below are provided
+//  compile 'com.google.code.findbugs:jsr305'
+  compileOnly project(':server:sonar-server') // needed for compilation, others for packaging
+  ce project(':server:sonar-ce')
+
+  scanner project(path: ':sonar-scanner-engine-shaded', configuration: 'shadow')
+
+  webapp project(path: ':server:sonar-web', configuration: 'archives')
+
+  jdbc_mssql 'com.microsoft.sqlserver:mssql-jdbc'
+  jdbc_mysql 'mysql:mysql-connector-java'
+  jdbc_postgresql 'org.postgresql:postgresql'
+  jdbc_h2 'com.h2database:h2'
+
+  plugin 'org.sonarsource.java:sonar-java-plugin:5.1.0.13090@jar'
+  plugin 'org.sonarsource.javascript:sonar-javascript-plugin:4.0.0.5862@jar'
+  plugin 'org.sonarsource.dotnet:sonar-csharp-plugin:6.7.1.4347@jar'
+  plugin 'org.sonarsource.scm.git:sonar-scm-git-plugin:1.3.0.869@jar'
+  plugin 'org.sonarsource.scm.svn:sonar-scm-svn-plugin:1.6.0.860@jar'
+  plugin 'org.sonarsource.php:sonar-php-plugin:2.12.1.3018@jar'
+  plugin 'org.sonarsource.python:sonar-python-plugin:1.9.0.2010@jar'
+  plugin 'org.sonarsource.flex:sonar-flex-plugin:2.3@jar'
+  plugin 'org.sonarsource.xml:sonar-xml-plugin:1.4.3.1027@jar'
+  plugin 'org.sonarsource.typescript:sonar-typescript-plugin:1.5.0.2122@jar'
+
+  wrapper 'tanukisoft:wrapper:3.2.3'
+
+  testCompile 'junit:junit'
+  testCompile 'org.assertj:assertj-core'
+  testCompile 'org.mockito:mockito-core'
+}
+
+jar {
+  classifier = 'original'
+}
+shadowJar {
+  manifest {
+    attributes 'Main-Class': 'org.sonar.application.App'
+  }
+  classifier = null
+}
+
+task zip(type: Zip) {
+  into('sonarqube/') {
+    from file('src/main/assembly')
+    exclude 'elasticsearch/modules/lang-expression/**'
+    exclude 'elasticsearch/modules/lang-groovy/**'
+    exclude 'elasticsearch/modules/lang-mustache/**'
+    exclude 'elasticsearch/modules/lang-painless/**'
+    exclude 'elasticsearch/modules/transport-netty3/**'
+  }
+  into('sonarqube/lib/') {
+    from shadowJar
+  }
+  into('sonarqube/lib/jsw/') {
+    from configurations.wrapper
+  }
+  into('sonarqube/lib/bundled-plugins/') {
+    from configurations.plugin
+  }
+  into('sonarqube/lib/common/') {
+    from configurations.compile
+  }
+  into('sonarqube/lib/server/') {
+    from configurations.compileOnly - configurations.compile
+  }
+  into('sonarqube/lib/ce/') {
+    from configurations.ce
+  }
+  into('sonarqube/lib/scanner/') {
+    from configurations.scanner
+  }
+  dependsOn configurations.webapp
+  into('sonarqube/web/') {
+    from {
+      configurations.webapp.files.collect { zipTree(it) }
+    }
+  }
+  into('sonarqube/lib/jdbc/mssql/') {
+    from configurations.jdbc_mssql
+  }
+  into('sonarqube/lib/jdbc/mysql/') {
+    from configurations.jdbc_mysql
+  }
+  into('sonarqube/lib/jdbc/postgresql/') {
+    from configurations.jdbc_postgresql
+  }
+  into('sonarqube/lib/jdbc/h2/') {
+    from configurations.jdbc_h2
+  }
+}
+
+apply plugin: 'maven-publish'
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifact zip
+    }
+  }
+}

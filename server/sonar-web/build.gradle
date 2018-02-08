@@ -1,0 +1,21 @@
+apply plugin: 'com.moowork.node'
+apply plugin: 'war'
+
+node {
+  version = '8.5.0'
+  yarnVersion = '1.1.0'
+  download = true
+}
+
+yarn_run {
+  inputs.dir('scripts')
+  inputs.dir('src/main/js')
+  inputs.file('build.gradle')
+  outputs.dir('src/main/webapp')
+
+  args = ['build']
+}
+
+war.dependsOn yarn_run
+
+artifactoryPublish.skip = true

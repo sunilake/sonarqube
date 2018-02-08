@@ -1,0 +1,61 @@
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+  // relocated
+  compile 'com.google.code.gson:gson'
+  compile 'com.google.guava:guava'
+  compile 'commons-codec:commons-codec'
+  compile 'commons-io:commons-io'
+  compile 'commons-lang:commons-lang'
+
+  // shaded, but not relocated
+  compile project(':sonar-check-api')
+  // TODO exclusions
+  compile project(':sonar-duplications')
+
+  // TODO not shaded
+  // TODO exclusions
+  compile 'org.codehaus.woodstox:woodstox-core-lgpl'
+  compile 'org.codehaus.woodstox:stax2-api'
+  compile 'org.codehaus.staxmate:staxmate'
+
+  provided 'com.google.code.findbugs:jsr305'
+  provided 'org.slf4j:slf4j-api'
+  // TODO optional
+  provided 'javax.servlet:javax.servlet-api'
+  // TODO optional
+  provided 'ch.qos.logback:logback-classic'
+  // TODO optional
+  provided 'ch.qos.logback:logback-core'
+  // TODO optional
+  provided 'junit:junit'
+
+  testCompile 'com.tngtech.java:junit-dataprovider'
+  testCompile 'org.assertj:assertj-core'
+  testCompile 'org.mockito:mockito-core'
+  testCompile project(':sonar-testing-harness')
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+processResources {
+  filter ReplaceTokens, tokens: [
+    // TODO review
+    'project.version': project.version,
+    'project.version.3digits': project.version.endsWith('SNAPSHOT') ? project.version : project.version.tokenize('.').take(3).join('.')
+  ]
+}
+
+shadowJar {
+  configurations = [project.configurations.default]
+  relocate('com.google', 'org.sonar.api.internal.google')
+  relocate('org.apache.commons', 'org.sonar.api.internal.apachecommons')
+}
+
+apply plugin: 'maven-publish'
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifact source: shadowJar, classifier: null
+    }
+  }
+}

@@ -1,0 +1,15 @@
+dependencies {
+  compile 'org.codehaus.sonar:sonar-channel'
+
+  provided 'com.google.code.findbugs:jsr305'
+
+  testCompile 'junit:junit'
+  testCompile 'org.assertj:assertj-core'
+  testCompile 'org.mockito:mockito-core'
+  testCompile 'commons-io:commons-io'
+  // TODO exclusions
+  testCompile 'pmd:pmd:4.3'
+  testCompile 'ch.qos.logback:logback-classic'
+}
+
+artifactoryPublish.skip = true

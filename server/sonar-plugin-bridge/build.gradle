@@ -1,0 +1,7 @@
+dependencies {
+  compile project(':sonar-plugin-api')
+  compile project(':sonar-core')
+  provided 'com.google.code.findbugs:jsr305'
+}
+
+artifactoryPublish.skip = true

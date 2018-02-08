@@ -1,0 +1,31 @@
+dependencies {
+  compile 'com.hazelcast:hazelcast'
+  compile 'org.slf4j:slf4j-api'
+  compile 'org.slf4j:jul-to-slf4j'
+  compile 'ch.qos.logback:logback-classic'
+  compile 'commons-codec:commons-codec'
+  compile 'commons-io:commons-io'
+  compile 'commons-lang:commons-lang'
+  compile 'com.google.guava:guava'
+  provided 'com.google.code.findbugs:jsr305'
+  // TODO optional
+  compileOnly 'org.nanohttpd:nanohttpd'
+  // TODO optional
+  compileOnly 'com.google.protobuf:protobuf-java'
+  testCompile 'com.google.protobuf:protobuf-java'
+
+  testCompile 'org.assertj:assertj-core'
+  testCompile 'com.tngtech.java:junit-dataprovider'
+  testCompile project(':sonar-testing-harness')
+  testCompile 'org.mockito:mockito-core'
+  // Workaround to resolve dependencies of eclipse specific packaging: https://issues.gradle.org/browse/GRADLE-2076
+  testCompile module('org.eclipse.jetty:jetty-server') {
+    dependencies(
+      "org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016@jar",
+      "org.eclipse.jetty:jetty-continuation:8.1.2.v20120308",
+      "org.eclipse.jetty:jetty-http:8.1.2.v20120308"
+    )
+  }
+}
+
+artifactoryPublish.skip = true
