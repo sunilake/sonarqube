@@ -6,7 +6,7 @@
     <groupId>org.sonarsource.sonarqube</groupId>
     <artifactId>sonarqube</artifactId>
     <version>7.1-SNAPSHOT</version>
-    <relativePath>../..</relativePath>
+    <relativePath>../../..</relativePath>
   </parent>
   <artifactId>foo-plugin-v1</artifactId>
   <name>SonarQube :: Plugins :: Foo (V1)</name>

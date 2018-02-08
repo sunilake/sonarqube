@@ -24,6 +24,24 @@
       <artifactId>sonar-server</artifactId>
       <version>${apiVersion}</version>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.sonarsource.sonarqube</groupId>
+          <artifactId>sonar-db-dao</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.sonarsource.sonarqube</groupId>
+          <artifactId>sonar-db-migration</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.sonarsource.sonarqube</groupId>
+          <artifactId>sonar-markdown</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.sonarsource.sonarqube</groupId>
+          <artifactId>sonar-plugin-bridge</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 

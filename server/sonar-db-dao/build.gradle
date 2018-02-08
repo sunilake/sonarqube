@@ -21,3 +21,13 @@ test {
 }
 
 artifactoryPublish.skip = true
+
+// Used by fake-governance-plugin
+apply plugin: 'maven-publish'
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+}
