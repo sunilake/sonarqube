@@ -4,8 +4,14 @@ set -euo pipefail
 ORCHESTRATOR_CONFIG_URL=$1
 shift
 
-mvn verify \
-  -pl :sonar-db-core,:sonar-db-migration,:sonar-db-dao \
-  -Dorchestrator.configUrl=$ORCHESTRATOR_CONFIG_URL \
-  -Dwith-db-drivers \
-  -B -e -V $*
+# create DB
+mvn -B initialize \
+  -pl :sonar-db-core \
+  -Dorchestrator.configUrl=$ORCHESTRATOR_CONFIG_URL
+
+# execute tests
+./gradlew --no-daemon \
+  :server:sonar-db-core:test \
+  :server:sonar-db-migration:test \
+  :server:sonar-db-dao:test \
+  -Dorchestrator.configUrl=$ORCHESTRATOR_CONFIG_URL
