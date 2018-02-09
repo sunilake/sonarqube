@@ -28,3 +28,4 @@ include 'sonar-ws'
 //include 'sonar-ws-generator'
 
 include 'plugins:sonar-xoo-plugin'
+include 'server:sonar-qa-util'
