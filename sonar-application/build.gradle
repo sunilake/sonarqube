@@ -73,6 +73,10 @@ task zip(type: Zip) {
     exclude 'elasticsearch/modules/lang-painless/**'
     exclude 'elasticsearch/modules/transport-netty3/**'
   }
+  // Create the empty dir (plugins) required by elasticsearch
+  into('sonarqube/elasticsearch/') {
+    from "$buildDir/elasticsearch"
+  }
   into('sonarqube/lib/') {
     from shadowJar
   }
@@ -112,6 +116,10 @@ task zip(type: Zip) {
   into('sonarqube/lib/jdbc/h2/') {
     from configurations.jdbc_h2
   }
+}
+// Create the empty dir required by elasticsearch
+zip.doFirst {
+  new File(buildDir, 'elasticsearch/plugins').mkdirs()
 }
 
 apply plugin: 'maven-publish'
