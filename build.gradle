@@ -5,12 +5,14 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'io.spring.gradle:dependency-management-plugin:1.0.2.RELEASE'
+    classpath 'io.spring.gradle:dependency-management-plugin:1.0.4.RELEASE'
+    // TODO Since 3.2.0 the provided configuration is incompatible with Gradle 3.4 and later and fail the builds
+    //classpath "com.netflix.nebula:gradle-extra-configurations-plugin:3.3.0"
     classpath "com.netflix.nebula:gradle-extra-configurations-plugin:3.1.0"
-    classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
-    classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
-    classpath 'com.moowork.gradle:gradle-node-plugin:1.1.1'
-    classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.4.15'
+    classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+    classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.4'
+    classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
+    classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.6.2'
   }
 }
 
