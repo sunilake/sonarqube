@@ -25,6 +25,7 @@ dependencies {
   // TODO all below are provided
 //  compile 'com.google.code.findbugs:jsr305'
   compileOnly project(':server:sonar-server') // needed for compilation, others for packaging
+  ce 'org.nanohttpd:nanohttpd' // TODO not in pom
   ce project(':server:sonar-ce')
 
   scanner project(path: ':sonar-scanner-engine-shaded', configuration: 'shadow')
