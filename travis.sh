@@ -213,7 +213,7 @@ BUILD)
 
 #    mvn deploy $MAVEN_ARGS -Dsource.skip=true -Pdeploy-sonarsource
      
-    ./gradlew build publishToMavenLocal artifactory --no-daemon
+    ./gradlew build publishToMavenLocal artifactoryPublish --no-daemon
   fi
 
   ./run-integration-tests.sh "Lite" ""
