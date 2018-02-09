@@ -181,6 +181,7 @@ subprojects {
   }
   test {
     systemProperty 'java.io.tmpdir', tempDir
+    systemProperty 'java.awt.headless', true 
     maxHeapSize = "512m"
   }
 
