@@ -244,7 +244,8 @@ BUILD)
     ./gradlew build publishToMavenLocal artifactoryPublish --no-daemon
   fi
 
-  ./run-integration-tests.sh "Lite" ""
+  # TODO: add to remove Lite intergation from Travis build
+  #./run-integration-tests.sh "Lite" ""
   ;;
 
 WEB_TESTS)
