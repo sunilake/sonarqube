@@ -193,6 +193,13 @@ subprojects {
       artifact = 'com.google.protobuf:protoc:3.0.0-beta-2'
     }
   }
+
+  apply plugin: 'idea'
+  idea {
+    module {
+      sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java")
+    }
+  }
 }
 
 configurations {
