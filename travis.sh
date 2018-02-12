@@ -133,6 +133,34 @@ case "$TARGET" in
 
 BUILD)
 
+  if [ -d tests/target ]; then
+    
+    if [ -f tests/target/surefire-reports/org.sonarqube.tests.lite.LiteSuite-output.txt ]; then
+      echo 'PRINT TESTS LOGS'
+      cat tests/target/surefire-reports/org.sonarqube.tests.lite.LiteSuite-output.txt
+    fi
+    if [ -f tests/target/1/sonarqube/logs/sonar.log ]; then
+      echo 'PRINT SQ SONAR LOGS'
+      cat tests/target/1/sonarqube/logs/sonar.log
+    fi
+    if [ -f tests/target/1/sonarqube/logs/web.log ]; then
+      echo 'PRINT SQ WEB LOGS'
+      cat tests/target/1/sonarqube/logs/web.log
+    fi
+    if [ -f tests/target/1/sonarqube/logs/es.log ]; then
+      echo 'PRINT SQ ES LOGS'
+      cat tests/target/1/sonarqube/logs/es.log
+    fi
+    if [ -f tests/target/1/sonarqube/logs/ce.log ]; then
+      echo 'PRINT SQ CE LOGS'
+      cat tests/target/1/sonarqube/logs/ce.log
+    fi
+    if [ -f tests/target/1/sonarqube/logs/access.log ]; then
+      echo 'PRINT SQ ACCESS LOGS'
+      cat tests/target/1/sonarqube/logs/access.log
+    fi
+  fi
+
   installJdk8
   installMaven
   installNode
