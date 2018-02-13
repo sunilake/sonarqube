@@ -14,10 +14,6 @@ build/
 # ---- Javadoc
 docs.tar
 
-# ---- Maven
-target/
-dependency-reduced-pom.xml
-
 # ---- IntelliJ IDEA
 *.iws
 *.iml
