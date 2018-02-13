@@ -1,0 +1,28 @@
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+  provided project(':sonar-plugin-api')
+  provided project(':sonar-ws')
+}
+
+jar {
+  classifier = 'original'
+}
+shadowJar {
+  manifest {
+    attributes(
+      'Plugin-Key': 'ws-plugin',
+      'Plugin-Version': version,
+      'Plugin-Class': 'WsPlugin',
+      'Plugin-ChildFirstClassLoader': 'false',
+      'Sonar-Version': '7.1-SNAPSHOT',
+      'SonarLint-Supported': 'false',
+      'Plugin-Name': 'SonarQube Integration Tests :: Plugins :: Ws',
+      'Plugin-License': 'GNU LGPL 3'
+    )
+  }
+}
+
+artifacts {
+  archives shadowJar
+}

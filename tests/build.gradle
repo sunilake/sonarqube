@@ -1,0 +1,22 @@
+ext {
+  jettyVersion = '9.3.11.v20160721'
+}
+
+dependencies {
+  testCompile 'org.sonarsource.orchestrator:sonar-orchestrator'
+  testCompile project(':server:sonar-qa-util')
+  testCompile project(':server:sonar-process')
+  testCompile project(':sonar-ws')
+
+  testCompile 'junit:junit'
+  testCompile 'org.assertj:assertj-core'
+  testCompile 'org.assertj:assertj-guava'
+  testCompile 'com.googlecode.json-simple:json-simple'
+  testCompile 'org.skyscreamer:jsonassert:1.2.0'
+  testCompile 'com.squareup.okhttp3:mockwebserver'
+  testCompile 'org.subethamail:subethasmtp'
+  testCompile "org.eclipse.jetty:jetty-server:${jettyVersion}"
+  testCompile "org.eclipse.jetty:jetty-servlet:${jettyVersion}"
+  testCompile "org.eclipse.jetty:jetty-proxy:${jettyVersion}"
+  testCompile 'org.jboss.byteman:byteman-submit:3.0.10'
+}

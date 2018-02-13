@@ -1,0 +1,33 @@
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+  compile 'com.google.guava:guava'
+  compile 'commons-io:commons-io'
+  compile 'commons-lang:commons-lang'
+
+  provided 'com.google.code.findbugs:jsr305'
+  provided project(':sonar-plugin-api')
+  provided project(':tests:plugins:backdating-plugin-v1')
+}
+
+jar {
+  classifier = 'original'
+}
+shadowJar {
+  manifest {
+    attributes(
+      'Plugin-Key': 'custombackdating',
+      'Plugin-Version': version,
+      'Plugin-Class': 'org.sonar.backdating.custom.BackdatingPlugin',
+      'Plugin-ChildFirstClassLoader': 'false',
+      'Sonar-Version': '7.1-SNAPSHOT',
+      'SonarLint-Supported': 'false',
+      'Plugin-Name': 'Custom',
+      'Plugin-License': 'GNU LGPL 3'
+    )
+  }
+}
+
+artifacts {
+  archives shadowJar
+}

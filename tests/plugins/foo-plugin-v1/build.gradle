@@ -1,0 +1,32 @@
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+  compile 'com.google.guava:guava'
+  compile 'commons-io:commons-io'
+  compile 'commons-lang:commons-lang'
+
+  provided 'com.google.code.findbugs:jsr305'
+  provided project(':sonar-plugin-api')
+}
+
+jar {
+  classifier = 'original'
+}
+shadowJar {
+  manifest {
+    attributes(
+      'Plugin-Key': 'foo',
+      'Plugin-Version': version,
+      'Plugin-Class': 'org.sonar.foo.FooPlugin',
+      'Plugin-ChildFirstClassLoader': 'false',
+      'Sonar-Version': '7.1-SNAPSHOT',
+      'SonarLint-Supported': 'false',
+      'Plugin-Name': 'Foo',
+      'Plugin-License': 'GNU LGPL 3'
+    )
+  }
+}
+
+artifacts {
+  archives shadowJar
+}

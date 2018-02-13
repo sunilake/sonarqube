@@ -1,0 +1,27 @@
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+  provided project(':sonar-plugin-api')
+}
+
+jar {
+  classifier = 'original'
+}
+shadowJar {
+  manifest {
+    attributes(
+      'Plugin-Key': 'sonar-subcategories-plugin',
+      'Plugin-Version': version,
+      'Plugin-Class': 'SubCategoriesPlugin',
+      'Plugin-ChildFirstClassLoader': 'false',
+      'Sonar-Version': '7.1-SNAPSHOT',
+      'SonarLint-Supported': 'false',
+      'Plugin-Name': 'Plugins :: SubCategories',
+      'Plugin-License': 'GNU LGPL 3'
+    )
+  }
+}
+
+artifacts {
+  archives shadowJar
+}

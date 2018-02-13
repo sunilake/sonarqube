@@ -1,0 +1,27 @@
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+  provided project(':sonar-plugin-api')
+}
+
+jar {
+  classifier = 'original'
+}
+shadowJar {
+  manifest {
+    attributes(
+      'Plugin-Key': 'AccessSecuredPropsPlugin',
+      'Plugin-Version': version,
+      'Plugin-Class': 'AccessSecuredPropsPlugin',
+      'Plugin-ChildFirstClassLoader': 'false',
+      'Sonar-Version': '1.0.2.42',
+      'SonarLint-Supported': 'false',
+      'Plugin-Name': 'Plugins :: Access Secured PropertiesFoo',
+      'Plugin-License': 'GNU LGPL 3'
+    )
+  }
+}
+
+artifacts {
+  archives shadowJar
+}
