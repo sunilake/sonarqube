@@ -164,7 +164,7 @@ public class ItUtils {
    * @param dirName the directory of it/plugins, for example "sonar-fake-plugin".
    */
   public static FileLocation pluginArtifact(String dirName) {
-    return FileLocation.byWildcardMavenFilename(new File("plugins/" + dirName + "/target"), dirName + "-*.jar");
+    return FileLocation.byWildcardMavenFilename(new File("plugins/" + dirName + "/build/libs"), dirName + "-*.jar");
   }
 
   /**

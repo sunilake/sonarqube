@@ -57,9 +57,9 @@ public class Byteman {
 
   private static String findBytemanJar() {
     // see pom.xml, Maven copies and renames the artifact.
-    File jar = new File("target/byteman.jar");
+    File jar = new File("build/resources/test/byteman.jar");
     if (!jar.exists()) {
-      throw new IllegalStateException("Can't find " + jar + ". Please execute 'mvn generate-test-resources' once in directory tests/.");
+      throw new IllegalStateException("Can't find " + jar + ". Please execute 'gradle processTestResources' once in directory tests/.");
     }
     return jar.getAbsolutePath();
   }

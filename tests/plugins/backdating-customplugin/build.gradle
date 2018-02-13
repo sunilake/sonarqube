@@ -10,10 +10,9 @@ dependencies {
   provided project(':tests:plugins:backdating-plugin-v1')
 }
 
-jar {
-  classifier = 'original'
-}
+jar.enabled = false
 shadowJar {
+  classifier = null
   manifest {
     attributes(
       'Plugin-Key': 'custombackdating',
@@ -23,7 +22,8 @@ shadowJar {
       'Sonar-Version': '7.1-SNAPSHOT',
       'SonarLint-Supported': 'false',
       'Plugin-Name': 'Custom',
-      'Plugin-License': 'GNU LGPL 3'
+      'Plugin-License': 'GNU LGPL 3',
+      'Plugin-Base': 'backdating'
     )
   }
 }

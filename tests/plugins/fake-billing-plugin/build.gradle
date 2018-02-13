@@ -5,10 +5,9 @@ dependencies {
   provided project(':server:sonar-server')
 }
 
-jar {
-  classifier = 'original'
-}
+jar.enabled = false
 shadowJar {
+  classifier = null
   manifest {
     attributes(
       'Plugin-Key': 'billing',

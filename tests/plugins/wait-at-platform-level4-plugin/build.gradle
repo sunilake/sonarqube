@@ -4,10 +4,9 @@ dependencies {
   provided project(':sonar-plugin-api')
 }
 
-jar {
-  classifier = 'original'
-}
+jar.enabled = false
 shadowJar {
+  classifier = null
   manifest {
     attributes(
       'Plugin-Key': 'wait-at-platform-level4-plugin',

@@ -5,10 +5,9 @@ dependencies {
   testCompile 'org.assertj:assertj-core'
 }
 
-jar {
-  classifier = 'original'
-}
+jar.enabled = false
 shadowJar {
+  classifier = null
   manifest {
     attributes(
       'Plugin-Key': 'security-plugin',

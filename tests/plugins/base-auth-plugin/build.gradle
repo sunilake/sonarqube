@@ -8,10 +8,9 @@ dependencies {
   }
 }
 
-jar {
-  classifier = 'original'
-}
+jar.enabled = false
 shadowJar {
+  classifier = null
   manifest {
     attributes(
       'Plugin-Key': 'baseauthplugin',

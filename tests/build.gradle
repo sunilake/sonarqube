@@ -1,5 +1,10 @@
 ext {
   jettyVersion = '9.3.11.v20160721'
+  bytemanVersion = '3.0.10'
+}
+
+configurations {
+  includeInTestResources
 }
 
 dependencies {
@@ -18,5 +23,15 @@ dependencies {
   testCompile "org.eclipse.jetty:jetty-server:${jettyVersion}"
   testCompile "org.eclipse.jetty:jetty-servlet:${jettyVersion}"
   testCompile "org.eclipse.jetty:jetty-proxy:${jettyVersion}"
-  testCompile 'org.jboss.byteman:byteman-submit:3.0.10'
+  testCompile "org.jboss.byteman:byteman-submit:${bytemanVersion}"
+
+  includeInTestResources "org.jboss.byteman:byteman:${bytemanVersion}"
+}
+
+processTestResources {
+  into('/') {
+    from configurations.includeInTestResources
+    // TODO cache not invalidated when pattern changes?
+    rename '(.*)-' + bytemanVersion + '.jar', '$1.jar'
+  }
 }

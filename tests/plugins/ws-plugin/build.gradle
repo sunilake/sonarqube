@@ -5,10 +5,9 @@ dependencies {
   provided project(':sonar-ws')
 }
 
-jar {
-  classifier = 'original'
-}
+jar.enabled = false
 shadowJar {
+  classifier = null
   manifest {
     attributes(
       'Plugin-Key': 'ws-plugin',
