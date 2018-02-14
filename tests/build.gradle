@@ -3,6 +3,93 @@ ext {
   bytemanVersion = '3.0.10'
 }
 
+// Run Test Suites and not individual tests
+test {
+  exclude '*'
+}
+task liteTest(type: Test) {
+  systemProperty 'sonar.runtimeVersion', version
+  filter {
+    include '**/LiteSuite.class'
+  }
+}
+task integrationTest(type: Test) {
+  if (System.getProperty('orchestrator.configUrl')) {
+    systemProperty 'orchestrator.configUrl', System.getProperty('orchestrator.configUrl')
+  }
+  systemProperty 'sonar.runtimeVersion', version
+  filter {
+    def category = System.getProperty('category')
+    switch (category) {
+      case 'Category1':
+        include '**/AuthorizationSuite'
+        include '**/MeasureSuite'
+        include '**/QualityGateSuite'
+        include '**/OrganizationQualityGateSuite'
+        include '**/SourceSuite'
+        include '**/Category1Suite'
+        break
+      case 'Category2':
+        include '**/IssueSuite'
+        include '**/QualityModelSuite'
+        include '**/OrganizationIssueSuite'
+        include '**/TestSuite'
+        break
+      case 'Category3':
+        include '**/Category3Suite'
+        include '**/ProjectSuite'
+        include '**/SonarCloudProjectSuite'
+        include '**/ComponentSuite'
+        break
+      case 'Category4':
+        include '**/DuplicationSuite.class'
+        include '**/Category4Suite.class'
+        break
+      case 'Category5':
+        include '**/Category5Suite.class'
+        break
+      case 'Category6':
+        include '**/Category6Suite.class'
+        include '**/OrganizationSuite.class'
+        break
+      default:
+        include '**/*Suite.class'
+    }
+  }
+}
+def pluginsForITs = [
+  ':tests::plugins:access-secured-props-plugin:build',
+  ':tests:plugins:base-auth-plugin:build',
+  ':tests:plugins:batch-plugin:build',
+  ':tests:plugins:extension-lifecycle-plugin:build',
+  ':tests:plugins:fake-billing-plugin:build',
+  ':tests:plugins:fake-governance-plugin:build',
+  ':tests:plugins:foo-plugin-v1:build',
+  ':tests:plugins:foo-plugin-v2:build',
+  ':tests:plugins:global-property-change-plugin:build',
+  ':tests:plugins:issue-filter-plugin:build',
+  ':tests:plugins:l10n-fr-pack:build',
+  ':tests:plugins:license-plugin:build',
+  ':tests:plugins:oauth2-auth-plugin:build',
+  ':tests:plugins:project-builder-plugin:build',
+  ':tests:plugins:property-relocation-plugin:build',
+  ':tests:plugins:property-sets-plugin:build',
+  ':tests:plugins:security-plugin:build',
+  ':tests:plugins:server-plugin:build',
+  ':tests:plugins:settings-encryption-plugin:build',
+  ':tests:plugins:settings-plugin:build',
+  ':tests:plugins:sonar-fake-plugin:build',
+  ':tests:plugins:sonar-subcategories-plugin:build',
+  ':tests:plugins:ui-extensions-plugin:build',
+  ':tests:plugins:posttask-plugin:build',
+  ':tests:plugins:wait-at-platform-level4-plugin:build',
+  ':tests:plugins:ws-plugin:build',
+  ':tests:plugins:backdating-plugin-v1:build',
+  ':tests:plugins:backdating-plugin-v2:build',
+  ':tests:plugins:backdating-customplugin:build',
+]
+integrationTest.dependsOn(pluginsForITs)
+
 configurations {
   includeInTestResources
 }

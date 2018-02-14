@@ -7,7 +7,7 @@ dependencies {
 
   provided 'com.google.code.findbugs:jsr305'
   provided project(':sonar-plugin-api')
-  provided project(':tests:plugins:backdating-plugin-v1')
+  provided project(path: ':tests:plugins:backdating-plugin-v1', configuration: 'shadow')
 }
 
 jar.enabled = false
