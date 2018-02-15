@@ -10,7 +10,7 @@ test {
 task liteTest(type: Test) {
   systemProperty 'sonar.runtimeVersion', version
   filter {
-    include '**/LiteSuite.class'
+    include '**/lite/*Suite.class'
   }
 }
 task integrationTest(type: Test) {
@@ -22,35 +22,33 @@ task integrationTest(type: Test) {
     def category = System.getProperty('category')
     switch (category) {
       case 'Category1':
-        include '**/AuthorizationSuite'
-        include '**/MeasureSuite'
-        include '**/QualityGateSuite'
-        include '**/OrganizationQualityGateSuite'
-        include '**/SourceSuite'
-        include '**/Category1Suite'
+        include '**/authorization/*Suite.class'
+        include '**/measure/*Suite.class'
+        include '**/qualityGate/*Suite.class'
+        include '**/source/*Suite.class'
+        include '**/Category1Suite.class'
         break
       case 'Category2':
-        include '**/IssueSuite'
-        include '**/QualityModelSuite'
-        include '**/OrganizationIssueSuite'
-        include '**/TestSuite'
+        include '**/issue/*Suite.class'
+        include '**/qualityModel/*Suite.class'
+        include '**/test/*Suite.class'
+        include '**/Category2Suite.class'
         break
       case 'Category3':
-        include '**/Category3Suite'
-        include '**/ProjectSuite'
-        include '**/SonarCloudProjectSuite'
-        include '**/ComponentSuite'
+        include '**/project/*Suite.class'
+        include '**/component/*Suite.class'
+        include '**/Category3Suite.class'
         break
       case 'Category4':
-        include '**/DuplicationSuite.class'
+        include '**/duplication/*Suite.class'
         include '**/Category4Suite.class'
         break
       case 'Category5':
         include '**/Category5Suite.class'
         break
       case 'Category6':
+        include '**/organization/*Suite.class'
         include '**/Category6Suite.class'
-        include '**/OrganizationSuite.class'
         break
       default:
         include '**/*Suite.class'
