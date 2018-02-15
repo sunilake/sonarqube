@@ -120,3 +120,5 @@ processTestResources {
     rename '(.*)-' + bytemanVersion + '.jar', '$1.jar'
   }
 }
+
+artifactoryPublish.skip = true
