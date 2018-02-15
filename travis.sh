@@ -244,7 +244,7 @@ BUILD)
     ./gradlew build artifactoryPublish --no-daemon
   fi
 
-  ./gradlew liteTest --no-daemon
+  ./gradlew liteTest --no-daemon -i
   ;;
 
 WEB_TESTS)
