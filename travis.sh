@@ -244,8 +244,7 @@ BUILD)
     ./gradlew build artifactoryPublish --no-daemon
   fi
 
-  # TODO: add to remove Lite intergation from Travis build
-  #./run-integration-tests.sh "Lite" ""
+  ./gradlew liteTest --no-daemon
   ;;
 
 WEB_TESTS)
