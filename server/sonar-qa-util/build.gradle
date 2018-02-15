@@ -8,9 +8,7 @@ dependencies {
   provided 'com.google.code.findbugs:jsr305'
 }
 
-artifactoryPublish.skip = true
-
-// Required for sonar-core-plugins
+// Required for core plugins
 apply plugin: 'maven-publish'
 publishing {
   publications {

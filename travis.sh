@@ -241,7 +241,7 @@ BUILD)
 
 #    mvn deploy $MAVEN_ARGS -Dsource.skip=true -Pdeploy-sonarsource
      
-    ./gradlew build publishToMavenLocal artifactoryPublish --no-daemon
+    ./gradlew build artifactoryPublish --no-daemon
   fi
 
   # TODO: add to remove Lite intergation from Travis build

@@ -28,8 +28,6 @@ dependencies {
   }
 }
 
-artifactoryPublish.skip = true
-
 apply plugin: 'maven-publish'
 publishing {
   publications {

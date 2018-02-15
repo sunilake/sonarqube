@@ -79,8 +79,6 @@ test {
   exclude 'org/sonar/server/rule/RuleServiceMediumTest.class'
 }
 
-artifactoryPublish.skip = true
-
 // Used by fake-billing-plugin and fake-governance-plugin
 apply plugin: 'maven-publish'
 publishing {
