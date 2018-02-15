@@ -19,7 +19,7 @@
  */
 import * as React from 'react';
 import { Link } from 'react-router';
-import { keyBy, sortBy } from 'lodash';
+import { keyBy, sortBy, groupBy } from 'lodash';
 import Modal from '../../controls/Modal';
 import Measure from '../../measure/Measure';
 import QualifierIcon from '../../shared/QualifierIcon';
@@ -57,7 +57,7 @@ interface MeasureWithMetric {
 }
 
 interface Measures {
-  [metricKey: string]: MeasureWithMetric | undefined;
+  [metricKey: string]: MeasureWithMetric;
 }
 
 interface Facet {
@@ -69,13 +69,14 @@ interface State {
   loading: boolean;
   measures: Measures;
   severitiesFacet?: Facet[];
+  showAllMeasures: boolean;
   tagsFacet?: Facet[];
   typesFacet?: Facet[];
 }
 
 export default class MeasuresOverlay extends React.PureComponent<Props, State> {
   mounted = false;
-  state: State = { loading: true, measures: {} };
+  state: State = { loading: true, measures: {}, showAllMeasures: false };
 
   componentDidMount() {
     this.mounted = true;
@@ -149,7 +150,7 @@ export default class MeasuresOverlay extends React.PureComponent<Props, State> {
   handleAllMeasuresClick = (event: React.SyntheticEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     event.currentTarget.blur();
-    // TODO
+    this.setState({ showAllMeasures: true });
   };
 
   renderMeasure = (measure: MeasureWithMetric | undefined) => {
@@ -241,50 +242,61 @@ export default class MeasuresOverlay extends React.PureComponent<Props, State> {
             {this.renderBigMeasure(measures.violations)}
             {this.renderBigMeasure(measures.sqale_index)}
           </div>
-          {typesFacet && (
-            <div className="measures">
-              <div className="measures-list">
-                {sortBy(typesFacet, f => TYPES.indexOf(f.val)).map(f => (
-                  <div className="measure measure-one-line" key={f.val}>
-                    <span className="measure-name">
-                      <IssueTypeIcon className="little-spacer-right" query={f.val} />
-                      {translate('issue.type', f.val)}
-                    </span>
-                    <span className="measure-value">{formatMeasure(f.count, 'SHORT_INT')}</span>
+          {measures.violations &&
+            !measures.violations.value && (
+              <>
+                {typesFacet && (
+                  <div className="measures">
+                    <div className="measures-list">
+                      {sortBy(typesFacet, f => TYPES.indexOf(f.val)).map(f => (
+                        <div className="measure measure-one-line" key={f.val}>
+                          <span className="measure-name">
+                            <IssueTypeIcon className="little-spacer-right" query={f.val} />
+                            {translate('issue.type', f.val)}
+                          </span>
+                          <span className="measure-value">
+                            {formatMeasure(f.count, 'SHORT_INT')}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {severitiesFacet && (
-            <div className="measures">
-              <div className="measures-list">
-                {sortBy(severitiesFacet, f => SEVERITIES.indexOf(f.val)).map(f => (
-                  <div className="measure measure-one-line" key={f.val}>
-                    <span className="measure-name">
-                      <SeverityHelper severity={f.val} />
-                    </span>
-                    <span className="measure-value">{formatMeasure(f.count, 'SHORT_INT')}</span>
+                )}
+                {severitiesFacet && (
+                  <div className="measures">
+                    <div className="measures-list">
+                      {sortBy(severitiesFacet, f => SEVERITIES.indexOf(f.val)).map(f => (
+                        <div className="measure measure-one-line" key={f.val}>
+                          <span className="measure-name">
+                            <SeverityHelper severity={f.val} />
+                          </span>
+                          <span className="measure-value">
+                            {formatMeasure(f.count, 'SHORT_INT')}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {tagsFacet && (
-            <div className="measures">
-              <div className="measures-list">
-                {tagsFacet.map(f => (
-                  <div className="measure measure-one-line" key={f.val}>
-                    <span className="measure-name">
-                      <i className="icon-tags little-spacer-right" />
-                      {f.val}
-                    </span>
-                    <span className="measure-value">{formatMeasure(f.count, 'SHORT_INT')}</span>
+                )}
+                {tagsFacet && (
+                  <div className="measures">
+                    <div className="measures-list">
+                      {tagsFacet.map(f => (
+                        <div className="measure measure-one-line" key={f.val}>
+                          <span className="measure-name">
+                            <i className="icon-tags little-spacer-right" />
+                            {f.val}
+                          </span>
+                          <span className="measure-value">
+                            {formatMeasure(f.count, 'SHORT_INT')}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
+                )}
+              </>
+            )}
         </div>
       </div>
     );
@@ -368,6 +380,40 @@ export default class MeasuresOverlay extends React.PureComponent<Props, State> {
     );
   };
 
+  renderDomain = (domain: string, measures: MeasureWithMetric[]) => {
+    return (
+      <div className="source-viewer-measures-card" key={domain}>
+        <div className="measures">
+          <div className="measures-list">
+            <div className="measure measure-one-line measure-big">
+              <span className="measure-name">{domain}</span>
+            </div>
+            {sortBy(measures.filter(measure => measure.value !== undefined), measure =>
+              getLocalizedMetricName(measure.metric)
+            ).map(measure => this.renderMeasure(measure))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  renderAllMeasures = () => {
+    const domains = groupBy(Object.values(this.state.measures), measure => measure.metric.domain);
+    const domainKeys = Object.keys(domains);
+    const odd = domainKeys.filter((_, index) => index % 2 === 1);
+    const even = domainKeys.filter((_, index) => index % 2 === 0);
+    return (
+      <div className="source-viewer-measures source-viewer-measures-secondary js-all-measures">
+        <div className="source-viewer-measures-section source-viewer-measures-section-big">
+          {odd.map(domain => this.renderDomain(domain, domains[domain]))}
+        </div>
+        <div className="source-viewer-measures-section source-viewer-measures-section-big">
+          {even.map(domain => this.renderDomain(domain, domains[domain]))}
+        </div>
+      </div>
+    );
+  };
+
   render() {
     const contendLabel = ''; // TODO
     const { branch, component } = this.props;
@@ -420,13 +466,13 @@ export default class MeasuresOverlay extends React.PureComponent<Props, State> {
           )}
 
           <div className="spacer-top">
-            <a className="js-show-all-measures" href="#" onClick={this.handleAllMeasuresClick}>
-              {translate('component_viewer.show_all_measures')}
-            </a>
-          </div>
-
-          <div className="source-viewer-measures source-viewer-measures-secondary js-all-measures hidden">
-            {/* TODO all measures */}
+            {this.state.showAllMeasures ? (
+              this.renderAllMeasures()
+            ) : (
+              <a className="js-show-all-measures" href="#" onClick={this.handleAllMeasuresClick}>
+                {translate('component_viewer.show_all_measures')}
+              </a>
+            )}
           </div>
         </div>
 
