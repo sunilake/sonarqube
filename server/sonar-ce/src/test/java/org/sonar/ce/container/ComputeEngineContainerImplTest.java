@@ -120,7 +120,7 @@ public class ComputeEngineContainerImplTest {
         + 26 // level 1
         + 53 // content of DaoModule
         + 3 // content of EsSearchModule
-        + 60 // content of CorePropertyDefinitions
+        + 58 // content of CorePropertyDefinitions
         + 1 // StopFlagContainer
     );
     assertThat(
