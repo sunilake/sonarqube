@@ -35,6 +35,7 @@ import org.sonar.db.webhook.WebhookDeliveryLiteDto;
 import org.sonar.db.webhook.WebhookDto;
 import org.sonar.server.organization.DefaultOrganizationProvider;
 import org.sonar.server.user.UserSession;
+import org.sonarqube.ws.Webhooks;
 import org.sonarqube.ws.Webhooks.ListResponse;
 import org.sonarqube.ws.Webhooks.ListResponseElement;
 
@@ -152,13 +153,17 @@ public class ListAction implements WebhooksWsAction {
   private static void addLastDelivery(ListResponseElement.Builder responseElementBuilder, WebhookDto webhook, Map<String, WebhookDeliveryLiteDto> lastDeliveries) {
     if (lastDeliveries.containsKey(webhook.getUuid())) {
       WebhookDeliveryLiteDto delivery = lastDeliveries.get(webhook.getUuid());
-      responseElementBuilder.getLatestDeliveryBuilder()
+      Webhooks.LatestDelivery.Builder builder = responseElementBuilder.getLatestDeliveryBuilder()
         .setId(delivery.getUuid())
         .setAt(formatDateTime(delivery.getCreatedAt()))
-        .setHttpStatus(delivery.getHttpStatus())
-        .setDurationMs(delivery.getDurationMs())
-        .setSuccess(delivery.isSuccess())
-        .build();
+        .setSuccess(delivery.isSuccess());
+      if (delivery.getHttpStatus() != null) {
+        builder.setHttpStatus(delivery.getHttpStatus());
+      }
+      if (delivery.getDurationMs() != null) {
+        builder.setDurationMs(delivery.getDurationMs());
+      }
+      builder.build();
     }
   }
 

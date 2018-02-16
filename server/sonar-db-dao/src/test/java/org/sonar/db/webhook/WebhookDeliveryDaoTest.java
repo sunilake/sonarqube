@@ -130,18 +130,16 @@ public class WebhookDeliveryDaoTest {
   @Test
   public void selectByWebhookUuid_returns_records_according_to_pagination() {
     WebhookDto webhookDto = dbWebhooks.insert(WebhookTesting.newProjectWebhook("COMPONENT_1"));
-    WebhookDeliveryDto dto1 = WebhookDbTesting.newDto("D1", webhookDto.getUuid(), "COMPONENT_1", "TASK_1").setCreatedAt(BEFORE);
-    underTest.insert(dbSession, dto1);
-    WebhookDeliveryDto dto2 = WebhookDbTesting.newDto("D2", webhookDto.getUuid(), "COMPONENT_1", "TASK_2").setCreatedAt(NOW);
-    underTest.insert(dbSession, dto2);
-    underTest.insert(dbSession, WebhookDbTesting.newDto("D3", webhookDto.getUuid(), "COMPONENT_1", "TASK_2").setCreatedAt(NOW));
-    underTest.insert(dbSession, WebhookDbTesting.newDto("D4", webhookDto.getUuid(), "COMPONENT_1", "TASK_2").setCreatedAt(NOW));
-    underTest.insert(dbSession, WebhookDbTesting.newDto("D5", webhookDto.getUuid(), "COMPONENT_1", "TASK_2").setCreatedAt(NOW));
+    underTest.insert(dbSession, WebhookDbTesting.newDto("D1", webhookDto.getUuid(), "COMPONENT_1", "TASK_2").setCreatedAt(NOW - 5_000L));
+    underTest.insert(dbSession, WebhookDbTesting.newDto("D2", webhookDto.getUuid(), "COMPONENT_1", "TASK_2").setCreatedAt(NOW - 4_000L));
+    underTest.insert(dbSession, WebhookDbTesting.newDto("D3", webhookDto.getUuid(), "COMPONENT_1", "TASK_2").setCreatedAt(NOW - 3_000L));
+    underTest.insert(dbSession, WebhookDbTesting.newDto("D4", webhookDto.getUuid(), "COMPONENT_1", "TASK_2").setCreatedAt(NOW - 2_000L));
+    underTest.insert(dbSession, WebhookDbTesting.newDto("D5", webhookDto.getUuid(), "COMPONENT_1", "TASK_2").setCreatedAt(NOW - 1_000L));
     underTest.insert(dbSession, WebhookDbTesting.newDto("D6", webhookDto.getUuid(), "COMPONENT_1", "TASK_2").setCreatedAt(NOW));
 
-    List<WebhookDeliveryLiteDto> deliveries = underTest.selectByWebhookUuid(dbSession, webhookDto.getUuid(), 1, 3);
+    List<WebhookDeliveryLiteDto> deliveries = underTest.selectByWebhookUuid(dbSession, webhookDto.getUuid(), 2, 2);
 
-    assertThat(deliveries).extracting(WebhookDeliveryLiteDto::getUuid).containsExactlyInAnyOrder("D3", "D4", "D5");
+    assertThat(deliveries).extracting(WebhookDeliveryLiteDto::getUuid).containsExactly("D4", "D3");
   }
 
   @Test
